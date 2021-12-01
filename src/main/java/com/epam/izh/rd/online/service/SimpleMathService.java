@@ -1,5 +1,7 @@
 package com.epam.izh.rd.online.service;
 
+import java.util.Arrays;
+
 public class SimpleMathService implements MathService {
 
     /**
@@ -13,7 +15,7 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int compare(int value1, int value2) {
-        return -2;
+        return Integer.compare(value1, value2);
     }
 
     /**
@@ -22,7 +24,7 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int maxFrom(int value1, int value2) {
-        return -1;
+        return Math.max(value1, value2);
     }
 
     /**
@@ -31,7 +33,13 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int maxFrom(int[] values) {
-        return -1;
+        int maxValue = values[0];
+        for (int i = 1; i < values.length; i++ ) {
+            if (maxValue < values[i]) {
+                maxValue = values[i];
+            }
+        }
+        return maxValue;
     }
 
     /**
@@ -40,7 +48,11 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int sum(int[] values) {
-        return -1;
+        int sumValues = 0;
+        for (int value : values) {
+            sumValues = sumValues + value;
+        }
+        return sumValues;
     }
 
     /**
@@ -49,7 +61,15 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int[] getEvenDigits(int[] values) {
-        return new int[]{};
+        int[] evenValues = new int[values.length];
+        int j = 0;
+        for (int value : values ) {
+            if (value % 2 == 0) {
+                evenValues[j] = value;
+                j++;
+            }
+        }
+        return Arrays.copyOf(evenValues, j);
     }
 
     /**
@@ -59,7 +79,11 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public long calcFactorial(int initialVal) {
-        return -1L;
+        int factorial = 1;
+        for (int i = 1; i <= initialVal; i++) {
+            factorial = factorial * i;
+        }
+        return factorial;
     }
 
     /**
@@ -74,8 +98,19 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public long calcFibonacci(int number) {
-        return -1L;
+        long[] arrFibonacci = new long[number + 1];
+        if (number == 0) {
+            arrFibonacci[number] = number;
+        } else {
+            arrFibonacci[0] = 0;
+            arrFibonacci[1] = 1;
+            for (int i = 2; i <= number; i++) {
+                arrFibonacci[i] = arrFibonacci[i - 1] + arrFibonacci[i - 2];
+            }
+        }
+        return arrFibonacci[number];
     }
+
 
     /**
      * Метод возвращает отсортированный по возрастанию массив.
@@ -83,7 +118,21 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int[] sort(int[] values) {
-        return new int[]{};
+        boolean sorted = false;
+        int temp;
+        while(!sorted) {
+            sorted = true;
+            for (int i = 0; i < values.length - 1; i++) {
+                if (values[i] > values[i+1]) {
+                    temp = values[i];
+                    values[i] = values[i+1];
+                    values[i+1] = temp;
+                    sorted = false;
+                }
+            }
+        }
+
+        return values;
     }
 
     /**
@@ -94,7 +143,30 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public boolean isPrimary(int number) {
-        return false;
+
+        //первая версия - проверяла остаток от деления на любое число, входящее в диапазон от 2 до (number - 1)
+        /*boolean isPrimary = true;
+        for (int i = 2; i < number); i++) {
+            if (number % i == 0)  {
+                isPrimary = false;
+                break;
+            }
+        }*/
+
+        //вторая версия - проверяю остаток от деления на любое число,
+        // входящее в диапазон от 2 до квадратного корня из number, т.е. убрала заведомо лишние итерации.
+        // В этом  варианте тоже есть лишние проверки, например нет смысла проверять четные числа,
+        // если число не делится без остатка на 2, но по-моему это излишнее усложнение алгоритма.
+        double endCalculation = Math.sqrt(number);
+        boolean isPrimary = true;
+        int i = 2;
+        while ((i <= endCalculation) && (isPrimary)){
+            if (number % i == 0)  {
+                isPrimary = false;
+            }
+            i++;
+        }
+        return isPrimary;
     }
 
     /**
@@ -104,6 +176,11 @@ public class SimpleMathService implements MathService {
      */
     @Override
     public int[] reverseArray(int[] values) {
-        return new int[]{};
+        int[] reverseValues = new int[values.length];
+        for (int i = 0; i < values.length; i++){
+            reverseValues[values.length - i - 1] = values[i];
+        }
+        return reverseValues;
     }
 }
+
